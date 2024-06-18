@@ -1,6 +1,6 @@
 #+AUTHOR: tokisuno
 #+TITLE: tokisuno's emacs config
-#+STARTUP: showeverything
+#+STARTUP: content
 #+OPTIONS: toc:2
 
 * Housekeeping
@@ -22,7 +22,7 @@
   (global-display-line-numbers-mode 1)
   (column-number-mode)
 
-  (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
+  (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 125)
 #+end_src
 
 ** Hide numbers when in terminal
@@ -42,7 +42,8 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
 
-* Package.el
+* Package management
+** Package.el
 #+begin_src emacs-lisp
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -55,27 +56,29 @@
   (package-refresh-contents))
 #+end_src
 
-* Use-package
+** Use-package
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t)
 #+end_src
 
-* Org-bullets
+* UI Customization
+** Org-bullets
 #+begin_src emacs-lisp
   (use-package org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
 
-* Emacs-dashboard
+** Emacs-dashboard
 #+begin_src emacs-lisp
   (use-package dashboard
     :config
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
     :init
+    (setq dashboard-startup-banner "~/Dropbox/.dotfiles/.config/emacs/banner.jpg")
     (setq dashboard-banner-logo-title "bienvenue a tokimacs")
     (setq dashboard-center-content t)
     (setq dashboard-navigation-cycle t)
@@ -85,8 +88,45 @@
     (setq dashboard-items '((recents . 5)
 			    (agenda . 5))))
 #+end_src
+** Rainbow-mode
+#+begin_src emacs-lisp
+  (use-package rainbow-mode)
+#+end_src
+** Olivetti
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :hook
+    (org-mode . olivetti-mode)
+    (dashboard-mode . olivetti-mode))
+  (setq olivetti-body-width 120)
+#+end_src
+** Nerd-icons.el
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :custom
+    (nerd-icons-font-family "JetBrainsMono Nerd Font"))
+  (use-package nerd-icons-ibuffer
+    :ensure t
+    :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+  (use-package nerd-icons-completion
+    :config
+    (nerd-icons-completion-mode))
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+  (use-package nerd-icons-ivy-rich
+    :ensure t
+    :init
+    (nerd-icons-ivy-rich-mode 1)
+    (ivy-rich-mode 1))
+#+end_src
 
-* VTerm
+** Command-log
+#+begin_src emacs-lisp
+  (use-package command-log-mode)
+#+end_src
+* Programming
+** VTerm
 #+begin_src emacs-lisp
   (use-package vterm
     :ensure t)
@@ -107,19 +147,14 @@
 		 (window-height . 0.3)))
 #+end_src
 
-* Command-log
-#+begin_src emacs-lisp
-  (use-package command-log-mode)
-#+end_src
-
-* Projectile
+** Projectile
 #+begin_src emacs-lisp
   (use-package projectile)
   (projectile-mode +1)
   (setq projectile-completion-system 'ivy)
 #+end_src
 
-* Ivy/counsel completion
+** Ivy/counsel completion
 #+begin_src emacs-lisp
   (use-package counsel
     :bind (("M-x" . counsel-M-x)
@@ -149,27 +184,6 @@
     (ivy-rich-mode 1))
 #+end_src
 
-* Nerd-icons.el
-#+begin_src emacs-lisp
-  (use-package nerd-icons
-    :custom
-    (nerd-icons-font-family "JetBrainsMono Nerd Font"))
-  (use-package nerd-icons-ibuffer
-    :ensure t
-    :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
-  (use-package nerd-icons-completion
-    :config
-    (nerd-icons-completion-mode))
-  (use-package nerd-icons-dired
-    :hook
-    (dired-mode . nerd-icons-dired-mode))
-  (use-package nerd-icons-ivy-rich
-    :ensure t
-    :init
-    (nerd-icons-ivy-rich-mode 1)
-    (ivy-rich-mode 1))
-#+end_src
-
 * Doom packages
 ** Doom-themes
 #+begin_src emacs-lisp
@@ -178,7 +192,7 @@
     :config
     (setq doom-themes-enable-bold t)
     (setq doom-themes-enable-italic t)
-    (load-theme 'doom-gruvbox t)
+    (load-theme 'doom-badger t)
     (doom-themes-visual-bell-config))
 #+end_src
 
@@ -200,8 +214,8 @@
     :config
     (doom-modeline-mode 1))
 #+end_src
-
-* Which-key + General.el
+* Remapping
+** Which-key + General.el
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
@@ -209,8 +223,8 @@
     :config
     (setq which-key-idle-delay 0.3))
 #+end_src
-
-* Evil
+** Evil-mode
+*** Evil
 #+begin_src emacs-lisp
   (use-package evil
     :init
@@ -226,40 +240,42 @@
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 #+end_src
 
-* Evil-collection
+*** Evil-collection
 #+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
     :config
     (evil-collection-init))
 #+end_src
-
-* Remappings
-** General.el
+** Remappings
+*** General.el
 #+begin_src emacs-lisp
-  (use-package general
-    :config
-    (general-create-definer toki/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "C-SPC")
-    (toki/leader-keys
-      "p f" 'find-file :which-key "project view")
-    (toki/leader-keys
-      "r f" '(lambda () (interactive) (load-file (expand-file-name "~/.config/emacs/init.el"))) :which-key "run config")
-    (toki/leader-keys
-      "t t" 'vterm-toggle :which-key "toggle terminal")
-    (toki/leader-keys
-      "w f" 'evil-write :which-key "write file"))
+    (use-package general
+      :config
+      (general-create-definer toki/leader-keys
+	:keymaps '(normal insert visual emacs)
+	:prefix "SPC"
+	:global-prefix "C-SPC")
+      (toki/leader-keys
+	"SPC" 'find-file :which-key "project view")
+      (toki/leader-keys
+	"r f" '(lambda () (interactive) (load-file (expand-file-name "~/.config/emacs/init.el"))) :which-key "run config")
+      (toki/leader-keys
+	"t t" 'vterm-toggle :which-key "toggle terminal")
+      (toki/leader-keys
+	"w f" 'evil-write :which-key "write file"
+	"w l" 'evil-quit :which-key "quit buffer")
+      (toki/leader-keys
+	"g g" 'dashboard-open :which-key "open dashboard"))
 
-  (general-define-key
-   "C-M-j" 'counsel-switch-buffer)
-  ;; this makes me want to rip my dick off
-  (general-define-key
-   :keymaps '(normal insert visual emacs)
-   "C-u" 'evil-scroll-up)
-  (general-define-key
-   :keymaps '(normal insert visual emacs)
-   "C-d" 'evil-scroll-down)
+    (general-define-key
+     "C-M-j" 'counsel-switch-buffer)
+    ;; this makes me want to rip my dick off
+    (general-define-key
+     :keymaps '(normal insert visual emacs)
+     "C-u" 'evil-scroll-up)
+    (general-define-key
+     :keymaps '(normal insert visual emacs)
+     "C-d" 'evil-scroll-down)
 
 #+end_src

@@ -11,7 +11,7 @@
 (global-display-line-numbers-mode 1)
 (column-number-mode)
 
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
+(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 125)
 
 (dolist (mode '(term-mode-hook eshell-mode-hook shell-mode-hook vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
@@ -44,6 +44,7 @@
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   :init
+  (setq dashboard-startup-banner "~/Dropbox/.dotfiles/.config/emacs/banner.jpg")
   (setq dashboard-banner-logo-title "bienvenue a tokimacs")
   (setq dashboard-center-content t)
   (setq dashboard-navigation-cycle t)
@@ -52,6 +53,34 @@
   (setq dashboard-icon-type 'nerd-icons)
   (setq dashboard-items '((recents . 5)
 			  (agenda . 5))))
+
+(use-package rainbow-mode)
+
+(use-package olivetti
+  :hook
+  (org-mode . olivetti-mode)
+  (dashboard-mode . olivetti-mode))
+(setq olivetti-body-width 120)
+
+(use-package nerd-icons
+  :custom
+  (nerd-icons-font-family "JetBrainsMono Nerd Font"))
+(use-package nerd-icons-ibuffer
+  :ensure t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+(use-package nerd-icons-completion
+  :config
+  (nerd-icons-completion-mode))
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+(use-package nerd-icons-ivy-rich
+  :ensure t
+  :init
+  (nerd-icons-ivy-rich-mode 1)
+  (ivy-rich-mode 1))
+
+(use-package command-log-mode)
 
 (use-package vterm
   :ensure t)
@@ -70,8 +99,6 @@
 	       ;;(dedicated . t) ;dedicated is supported in emacs27
 	       (reusable-frames . visible)
 	       (window-height . 0.3)))
-
-(use-package command-log-mode)
 
 (use-package projectile)
 (projectile-mode +1)
@@ -104,30 +131,12 @@
   :init
   (ivy-rich-mode 1))
 
-(use-package nerd-icons
-  :custom
-  (nerd-icons-font-family "JetBrainsMono Nerd Font"))
-(use-package nerd-icons-ibuffer
-  :ensure t
-  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
-(use-package nerd-icons-completion
-  :config
-  (nerd-icons-completion-mode))
-(use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
-(use-package nerd-icons-ivy-rich
-  :ensure t
-  :init
-  (nerd-icons-ivy-rich-mode 1)
-  (ivy-rich-mode 1))
-
 (use-package doom-themes
   :ensure t
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-gruvbox t)
+  (load-theme 'doom-badger t)
   (doom-themes-visual-bell-config))
 
 (use-package doom-modeline
@@ -177,13 +186,16 @@
     :prefix "SPC"
     :global-prefix "C-SPC")
   (toki/leader-keys
-    "p f" 'find-file :which-key "project view")
+    "SPC" 'find-file :which-key "project view")
   (toki/leader-keys
     "r f" '(lambda () (interactive) (load-file (expand-file-name "~/.config/emacs/init.el"))) :which-key "run config")
   (toki/leader-keys
     "t t" 'vterm-toggle :which-key "toggle terminal")
   (toki/leader-keys
-    "w f" 'evil-write :which-key "write file"))
+    "w f" 'evil-write :which-key "write file"
+    "w l" 'evil-quit :which-key "quit buffer")
+  (toki/leader-keys
+    "g g" 'dashboard-open :which-key "open dashboard"))
 
 (general-define-key
  "C-M-j" 'counsel-switch-buffer)
