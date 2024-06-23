@@ -36,9 +36,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
@@ -52,7 +49,7 @@
   (setq dashboard-set-heading-icons t)
   (setq dashboard-icon-type 'nerd-icons)
   (setq dashboard-items '((recents . 5)
-			  (agenda . 5))))
+                          (agenda . 5))))
 
 (use-package rainbow-mode)
 
@@ -80,7 +77,26 @@
   (nerd-icons-ivy-rich-mode 1)
   (ivy-rich-mode 1))
 
+(use-package auto-dim-other-buffers)
+(add-hook 'after-init-hook (lambda ()
+                             (when (fboundp 'auto-dim-other-buffers-mode)
+                               (auto-dim-other-buffers-mode t))))
+
 (use-package command-log-mode)
+
+(use-package org
+  :hook
+  (org-mode . org-indent-mode)
+  (org-mode . org-bullets-mode))
+
+(use-package org-appear
+  :hook
+  (org-mode . org-appear-mode))
+
+(use-package org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(setq org-agenda-files '("~/Dropbox/org/todo.org"))
 
 (use-package vterm
   :ensure t)
@@ -130,6 +146,23 @@
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
+
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 (use-package doom-themes
   :ensure t
@@ -188,14 +221,23 @@
   (toki/leader-keys
     "SPC" 'find-file :which-key "project view")
   (toki/leader-keys
+    "o a" 'org-agenda :which-key "org agenda")
+  (toki/leader-keys
     "r f" '(lambda () (interactive) (load-file (expand-file-name "~/.config/emacs/init.el"))) :which-key "run config")
   (toki/leader-keys
-    "t t" 'vterm-toggle :which-key "toggle terminal")
+    "t t" 'vterm-toggle :which-key "toggle terminal"
+    "t o" 'olivetti-mode :which-key "toggle olivetti-mode"
+    "t e" 'emojify-mode :which-key "toggle emojify-mode")
   (toki/leader-keys
-    "w f" 'evil-write :which-key "write file"
-    "w l" 'evil-quit :which-key "quit buffer")
+    "w h" 'evil-window-left :which-key "window left"
+    "w j" 'evil-window-down :which-key "window down"
+    "w k" 'evil-window-up :which-key "window up"
+    "w l" 'evil-window-right :which-key "window right"
+    "w f" 'evil-write :which-key "write da file"
+    "w b" 'evil-quit :which-key "write, bounce")
   (toki/leader-keys
-    "g g" 'dashboard-open :which-key "open dashboard"))
+    "g g" 'dashboard-open :which-key "open dashboard"
+    "g r" 'dashboard-refresh-buffer :which-key "open dashboard"))
 
 (general-define-key
  "C-M-j" 'counsel-switch-buffer)

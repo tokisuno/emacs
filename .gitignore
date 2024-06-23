@@ -1,3 +1,5 @@
-/elpa
-/transient
-/auto-save-list
+elpa/
+transient/
+auto-save-list/
+emojis/
+.cache/
