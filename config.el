@@ -95,7 +95,7 @@
 (use-package org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-(setq org-agenda-files '("~/Dropbox/org/todo.org"))
+(setq org-agenda-files '("~/Dropbox/org/"))
 
 (use-package vterm
   :ensure t)
@@ -211,12 +211,9 @@
     "t o" 'olivetti-mode :which-key "toggle olivetti-mode"
     "t e" 'emojify-mode :which-key "toggle emojify-mode")
   (toki/leader-keys
-    "w h" 'evil-window-left :which-key "window left"
-    "w j" 'evil-window-down :which-key "window down"
-    "w k" 'evil-window-up :which-key "window up"
-    "w l" 'evil-window-right :which-key "window right"
-    "w f" 'evil-write :which-key "write da file"
-    "w b" 'evil-quit :which-key "write, bounce")
+    "w f" 'evil-write :which-key "write to file"
+    "w q" 'evil-quit :which-key "write and quit"
+  )
   (toki/leader-keys
     "g g" 'dashboard-open :which-key "open dashboard"
     "g r" 'dashboard-refresh-buffer :which-key "open dashboard"))

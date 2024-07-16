@@ -145,7 +145,7 @@
 #+end_src
 ** Org-agenda
 #+begin_src emacs-lisp
-  (setq org-agenda-files '("~/Dropbox/org/"))
+  (setq org-agenda-files '("~/Dropbox/org/todo.org"))
 #+end_src
 * Programming
 ** VTerm
@@ -288,9 +288,12 @@
       "t o" 'olivetti-mode :which-key "toggle olivetti-mode"
       "t e" 'emojify-mode :which-key "toggle emojify-mode")
     (toki/leader-keys
-      "w f" 'evil-write :which-key "write to file"
+      "w f" 'evil-write :which-key "write da file"
       "w q" 'evil-quit :which-key "write and quit"
     )
+    (toki/leader-keys
+      "s f" 'evil-write :which-key "write da file"
+      "s l" 'evil-quit :which-key "write, bounce")
     (toki/leader-keys
       "g g" 'dashboard-open :which-key "open dashboard"
       "g r" 'dashboard-refresh-buffer :which-key "open dashboard"))
