@@ -4,6 +4,10 @@
 (setq inhibit-startup-message t)
 (setq visible-bell t)
 
+(setq auto-save-list-file-prefix "~/Dropbox/org/tmp")
+(setq auto-save-file-name-transforms
+      '((".*" "~/Dropbox/org/tmp" t)))
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
