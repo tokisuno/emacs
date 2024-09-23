@@ -15,9 +15,9 @@
 (global-display-line-numbers-mode 1)
 (column-number-mode)
 
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 125)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font" :height 130)
 
-(dolist (mode '(term-mode-hook eshell-mode-hook shell-mode-hook vterm-mode-hook))
+(dolist (mode '(term-mode-hook eshell-mode-hook shell-mode-hook vterm-mode-hook pdf-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -46,13 +46,14 @@
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   :init
   (setq dashboard-startup-banner "~/Dropbox/.dotfiles/.config/emacs/banner.jpg")
-  (setq dashboard-banner-logo-title "bienvenue a tokimacs")
+  (setq dashboard-banner-logo-title "EMACS!")
+  (setq dashboard-agenda-time-string-format "%Y-%m-%d %H:%M")
   (setq dashboard-center-content t)
   (setq dashboard-navigation-cycle t)
   (setq dashboard-set-init-info t)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-icon-type 'nerd-icons)
-  (setq dashboard-items '((agenda . 8))))
+  (setq dashboard-items '((agenda . 10))))
 
 (use-package rainbow-mode)
 
@@ -64,7 +65,7 @@
 
 (use-package nerd-icons
   :custom
-  (nerd-icons-font-family "JetBrainsMono Nerd Font"))
+  (nerd-icons-font-family "Iosevka Nerd Font"))
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
@@ -101,6 +102,35 @@
 
 (setq org-agenda-files '("~/Dropbox/org/"))
 
+(use-package org-roam
+  :custom
+  (org-roam-directory (file-truename "~/Dropbox/org/roam/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture))
+  ;; Dailies
+  :config
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode))
+
+(use-package org-journal
+  :init
+  (setq org-journal-prefix-key "C-c j ")
+  :config
+  (setq org-journal-dir "~/Dropbox/org/journal"
+        org-journal-date-format "%Y-%m-%d, %H:%M"))
+
+(use-package pdf-tools)
+(pdf-tools-install)
+(use-package tablist)
+
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
+
 (use-package vterm
   :ensure t)
 (use-package vterm-toggle)
@@ -119,15 +149,11 @@
 	       (reusable-frames . visible)
 	       (window-height . 0.3)))
 
-(use-package projectile)
-(projectile-mode +1)
-(setq projectile-completion-system 'ivy)
-
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-x" . counsel-find-file)
-	 :map minibuffer-local-map
+         ("C-x b" . counsel-ibuffer)
+         ("C-x C-x" . counsel-find-file)
+         :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history)))
 (use-package ivy
   :diminish
@@ -164,7 +190,6 @@
   (setq doom-modeline-support-imenu t)
   (setq doom-modeline-support-imenu t)
   (setq doom-modeline-height 20)
-  (setq doom-modeline-project-detection 'auto)
   (setq doom-modeline-icon t)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-major-mode-color-icon t)

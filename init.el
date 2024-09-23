@@ -5,8 +5,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(lsp-pyright lsp-mode auto-dim-other-buffers beacon dashboard evil-collection evil general which-key doom-modeline doom-themes nerd-icons-ivy-rich nerd-icons-dired nerd-icons-completion nerd-icons-ibuffer nerd-icons ivy-rich counsel projectile command-log-mode vterm-toggle org-bullets))
- '(warning-suppress-types '((use-package))))
+   '(org-journal org-roam jinx which-key vterm-toggle rainbow-mode projectile pdf-tools org-bullets org-beautify-theme org-appear olivetti nerd-icons-ivy-rich nerd-icons-ibuffer nerd-icons-dired nerd-icons-completion lsp-ui lsp-pyright lsp-ivy general evil-collection emojify emmet-mode eglot doom-themes doom-modeline dashboard counsel command-log-mode auto-dim-other-buffers)))
 
 
 (custom-set-faces
